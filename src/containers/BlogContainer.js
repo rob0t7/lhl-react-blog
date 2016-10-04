@@ -17,14 +17,34 @@ var data = [
 ]
 
 class BlogContainer extends Component {
+  constructor() {
+    super()
+    this.state = {
+      posts: [],
+      selectedPost: 0,
+      isLoading: true
+    }
+    this.handleBlogChange = this.handleBlogChange.bind(this)
+  }
+
+  componentDidMount() {
+    setTimeout(function() {
+      this.setState({posts: data, isLoading: false, selectedPost: 0})
+    }.bind(this), 2000)
+  }
+
+  handleBlogChange(index) {
+    this.setState({selectedPost: index})
+  }
   render() {
     return (
       <div style={style.general}>
         <div>
-          <BlogContent post={data[0]} style={style.content}/>
+          { this.state.isLoading ?
+            <div>Loading...</div> : <BlogContent post={this.state.posts[this.state.selectedPost]}/> }
         </div>
 
-        <BlogSideBar posts={data} style={style.sidebar}/>
+        <BlogSideBar posts={this.state.posts} onClickPost={this.handleBlogChange}/>
       </div>
     )
   }

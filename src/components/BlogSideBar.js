@@ -22,11 +22,20 @@ var linkStyle = {
   color: 'white'
 }
 const BlogSideBar = (props) => {
+  var clickEvent = (event) => {
+    event.preventDefault()
+    props.onClickPost(event.target.dataset.id)
+  }
+
   return (
     <div style={style}>
       <h2>Recent Posts</h2>
       <ul>
-        { props.posts.map( (post, i) => <li key={i}><a href="#" style={linkStyle}>{post.title}</a></li> ) }
+        { props.posts.map( (post, i) => { return (
+            <li key={i}>
+              <a onClick={clickEvent} href="#" style={linkStyle} data-id={i}>{post.title}</a>
+            </li>
+          )} ) }
       </ul>
     </div>
   )
