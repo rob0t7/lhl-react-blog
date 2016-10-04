@@ -5,15 +5,13 @@ import BlogSideBar from '../components/BlogSideBar'
 import Faker from 'faker'
 
 var style = {
-  general: {
-    padding: '1rem',
-    display: 'flex'
-  }
+  display: 'flex'
 }
 
 var data = [
   {title: 'Blue Jays Win World Series', content: Faker.lorem.paragraph()},
-  {title: 'Maple Leafs Need to Get Their Act Together', content: Faker.lorem.paragraph()}
+  {title: 'Maple Leafs Need to Get Their Act Together', content: Faker.lorem.paragraph()},
+  {title: 'LHL Rocks', content: Faker.lorem.paragraphs(2)}
 ]
 
 class BlogContainer extends Component {
@@ -21,32 +19,33 @@ class BlogContainer extends Component {
     super()
     this.state = {
       posts: [],
-      selectedPost: 0,
+      selectedPost: undefined,
       isLoading: true
     }
-    this.handleBlogChange = this.handleBlogChange.bind(this)
   }
 
   componentDidMount() {
     setTimeout(function() {
-      this.setState({posts: data, isLoading: false, selectedPost: 0})
+      this.setState({posts: data, isLoading: false, selectedPost: data[0]})
     }.bind(this), 2000)
   }
 
-  handleBlogChange(index) {
-    this.setState({selectedPost: index})
+  handlePostChange = (event) => {
+    event.preventDefault()
+    var selectedPost = this.state.posts[event.target.dataset.id]
+    this.setState({selectedPost})
   }
   render() {
-    return (
-      <div style={style.general}>
-        <div>
-          { this.state.isLoading ?
-            <div>Loading...</div> : <BlogContent post={this.state.posts[this.state.selectedPost]}/> }
+    if (this.state.isLoading) {
+      return <div>Loading</div>
+    } else {
+      return (
+        <div style={style}>
+          <BlogContent {...this.state.selectedPost}/>
+          <BlogSideBar posts={this.state.posts} onClick={this.handlePostChange}/>
         </div>
-
-        <BlogSideBar posts={this.state.posts} onClickPost={this.handleBlogChange}/>
-      </div>
-    )
+      )
+    }
   }
 }
 
